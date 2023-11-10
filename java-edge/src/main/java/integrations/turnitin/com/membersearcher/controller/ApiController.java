@@ -23,4 +23,5 @@ public class ApiController {
 	public CompletableFuture<MembershipList> fetchAllMemberships() {
 		return membershipService.fetchAllMembershipsWithUsers();
 	}
+
 }

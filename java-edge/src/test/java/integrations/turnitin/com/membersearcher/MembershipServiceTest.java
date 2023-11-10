@@ -1,13 +1,11 @@
 package integrations.turnitin.com.membersearcher;
 
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import integrations.turnitin.com.membersearcher.client.MembershipBackendClient;
 import integrations.turnitin.com.membersearcher.model.Membership;
 import integrations.turnitin.com.membersearcher.model.MembershipList;
 import integrations.turnitin.com.membersearcher.model.User;
+import integrations.turnitin.com.membersearcher.model.UserList;
 import integrations.turnitin.com.membersearcher.service.MembershipService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +13,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -36,6 +37,8 @@ public class MembershipServiceTest {
 
 	private User userTwo;
 
+	private UserList userList;
+
 	@BeforeEach
 	public void init() {
 		members = new MembershipList()
@@ -49,17 +52,16 @@ public class MembershipServiceTest {
 								.setRole("student")
 								.setUserId("2")
 				));
-		userOne = new User()
-				.setId("1")
-				.setName("test one")
-				.setEmail("test1@example.com");
-		userTwo = new User()
-				.setId("2")
-				.setName("test two")
-				.setEmail("test2@example.com");
+
+		userOne = new User().setId("1").setName("test one").setEmail("test1@example.com");
+
+		userTwo = new User().setId("2").setName("test two").setEmail("test2@example.com");
+
+		userList = new UserList()
+				.setUsers(List.of(userOne, userTwo));
+
 		when(membershipBackendClient.fetchMemberships()).thenReturn(CompletableFuture.completedFuture(members));
-		when(membershipBackendClient.fetchUser("1")).thenReturn(CompletableFuture.completedFuture(userOne));
-		when(membershipBackendClient.fetchUser("2")).thenReturn(CompletableFuture.completedFuture(userTwo));
+		when(membershipBackendClient.fetchUsers()).thenReturn(CompletableFuture.completedFuture(userList));
 	}
 
 	@Test
